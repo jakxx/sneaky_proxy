@@ -48,6 +48,9 @@ RUN a2enmod proxy_http proxy_balancer lbmethod_byrequests proxy proxy_ajp rewrit
 # Copying the latest redirect.rules over
 COPY --from=builder /tmp/redirect.rules /etc/apache2/redirect.rules
 
+# Disable verbose logging
+RUN sed -i 's/LogLevel alert/#LogLevel alert/g' /etc/apache2/redirect.rules
+
 # Getting our certificate
 RUN certbot -d ${PROXY_DOMAIN} --apache --agree-tos -m contact@${PROXY_DOMAIN} -n
 
