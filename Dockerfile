@@ -8,7 +8,7 @@ ENV REDIRECT_URL $REDIRECT_URL
 
 RUN apt-get update
 
-RUN apt-get install -y whois git
+RUN apt-get install -y whois git cron net-tools
 
 RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*

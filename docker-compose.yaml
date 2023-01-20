@@ -16,4 +16,5 @@ services:
         -  'HIDDEN_HOST=${HIDDEN_HOST}'
     ports:
       - 443:443
+      - 80:80
     image: sneaky_proxy
