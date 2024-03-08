@@ -14,7 +14,7 @@ RUN apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
 WORKDIR /
-RUN git clone https://github.com/0xZDH/redirect.rules
+RUN git clone https://github.com/jakxx/redirect.rules
 WORKDIR /redirect.rules
 
 RUN pip install --no-cache-dir -r requirements.txt
