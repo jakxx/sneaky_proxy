@@ -24,7 +24,7 @@ RUN chmod +x redirect_rules.py && \
 
 ADD ./exclude/ /redirect.rules/exclude/
 
-RUN ./redirect_rules.py -d https://${REDIRECT_URL}? --exclude-file exclude/exclude.txt
+RUN ./redirect_rules.py -d https://${REDIRECT_URL}/? --exclude-file exclude/exclude.txt
 
 # Bad fix for an issue we are gonna have
 RUN sed -i -e '159d' /tmp/redirect.rules
