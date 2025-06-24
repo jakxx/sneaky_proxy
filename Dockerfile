@@ -46,6 +46,10 @@ RUN apt update
 RUN apt install certbot apache2 python3-certbot-apache cron -y
 RUN a2enmod proxy_http proxy_balancer lbmethod_byrequests proxy proxy_ajp rewrite deflate headers proxy_connect proxy_html
 
+# Add cron job for renewal
+COPY renew-cron /etc/cron.d/certbot-renew
+RUN chmod 0644 /etc/cron.d/certbot-renew && crontab /etc/cron.d/certbot-renew
+
 # Copying the latest redirect.rules over
 COPY --from=builder /tmp/redirect.rules /etc/apache2/redirect.rules
 
