@@ -1,7 +1,7 @@
 ########################
 # redirect.rules
 
-FROM python:3.8.1-buster AS builder
+FROM python:3.8-slim-bullseye AS builder
 
 ARG REDIRECT_URL
 ENV REDIRECT_URL $REDIRECT_URL
