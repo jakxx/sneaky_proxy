@@ -82,4 +82,7 @@ RUN echo '</IfModule>' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN sed -i '27 s/#//' /etc/apache2/redirect.rules
 RUN sed -i -e '159d' /etc/apache2/redirect.rules
 
+# Grab script to edit rules if needed
+COPY comment_redir_rules.py /etc/apache2/
+
 CMD apachectl -D BACKGROUND && tail -f /var/log/apache2/error.log -f /var/log/apache2/access.log
