@@ -4,5 +4,5 @@
 
 sudo docker rm -f sneaky_proxy
 sudo docker image prune -af
-sudo docker-compose build
-sudo docker-compose up -d
+sudo docker compose build
+sudo docker compose up -d
