@@ -6,12 +6,6 @@ FROM python:3.8-slim-bullseye AS builder
 ARG REDIRECT_URL
 ENV REDIRECT_URL $REDIRECT_URL
 
-# Fail if REDIRECT_URL is not set
-RUN if [ -z "${REDIRECT_URL}" ]; then \
-        echo "ERROR: REDIRECT_URL is not set!"; \
-        exit 1; \
-    fi
-
 RUN apt-get update
 
 RUN apt-get install -y whois git cron net-tools
