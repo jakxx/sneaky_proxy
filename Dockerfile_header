@@ -69,7 +69,7 @@ RUN sed -i '/<\/VirtualHost>/d' /etc/apache2/sites-enabled/000-default.conf
 #Header check
 RUN echo 'RewriteEngine On' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN echo 'RewriteCond %{HTTP:DNT} ^$' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
-RUN echo 'RewriteRule ^(.*)$ https://${REDIRECT_URL}/? [L,R=301]' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+RUN echo "RewriteRule ^(.*)$ https://${REDIRECT_URL}/? [L,R=301]" >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 
 #Azure health check - SSL
 RUN echo 'RewriteCond %{HTTP_USER_AGENT} ^Edge\ Health\ Probe$ [NC]'  >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
