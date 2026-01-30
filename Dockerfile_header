@@ -64,10 +64,22 @@ RUN certbot -d ${PROXY_DOMAIN} --apache --agree-tos -m contact@${PROXY_DOMAIN} -
 # Removing these lines cause im not really sure how to do this better
 RUN sed -i '/<\/VirtualHost>/d' /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN sed -i '/<\/IfModule/d' /etc/apache2/sites-enabled/000-default-le-ssl.conf
+RUN sed -i '/<\/VirtualHost>/d' /etc/apache2/sites-enabled/000-default.conf
 
 #Header check
+RUN echo 'RewriteEngine On' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN echo 'RewriteCond %{HTTP:DNT} ^$' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN echo 'RewriteRule ^(.*)$ https://${REDIRECT_URL}/? [L,R=301]' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+
+#Azure health check - SSL
+RUN echo 'RewriteCond %{HTTP_USER_AGENT} ^Edge\ Health\ Probe$ [NC]'  >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+RUN echo 'RewriteRule ^ - [R=200,L]' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+
+#Azure health check - default
+RUN echo 'RewriteEngine On' >> /etc/apache2/sites-enabled/000-default.conf
+RUN echo 'RewriteCond %{HTTP_USER_AGENT} ^Edge\ Health\ Probe$ [NC]'  >> /etc/apache2/sites-enabled/000-default.conf
+RUN echo 'RewriteRule ^ - [R=200,L]' >> /etc/apache2/sites-enabled/000-default.conf
+RUN echo '</VirtualHost>' >> /etc/apache2/sites-enabled/000-default.conf
 
 # Adding redirect.rules to config 
 RUN echo 'Include /etc/apache2/redirect.rules' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
