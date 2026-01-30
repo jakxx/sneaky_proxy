@@ -6,6 +6,12 @@ FROM python:3.8-slim-bullseye AS builder
 ARG REDIRECT_URL
 ENV REDIRECT_URL $REDIRECT_URL
 
+# Fail if REDIRECT_URL is not set
+RUN if [ -z "${REDIRECT_URL}" ]; then \
+        echo "ERROR: REDIRECT_URL is not set!"; \
+        exit 1; \
+    fi
+
 RUN apt-get update
 
 RUN apt-get install -y whois git cron net-tools
@@ -64,7 +70,7 @@ RUN certbot -d ${PROXY_DOMAIN} --apache --agree-tos -m contact@${PROXY_DOMAIN} -
 # Removing these lines cause im not really sure how to do this better
 RUN sed -i '/<\/VirtualHost>/d' /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN sed -i '/<\/IfModule/d' /etc/apache2/sites-enabled/000-default-le-ssl.conf
-RUN sed -i '/<\/VirtualHost>/d' /etc/apache2/sites-enabled/000-default.conf
+#RUN sed -i '/<\/VirtualHost>/d' /etc/apache2/sites-enabled/000-default.conf
 
 #Header check
 RUN echo 'RewriteEngine On' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
@@ -76,10 +82,13 @@ RUN echo 'RewriteCond %{HTTP_USER_AGENT} ^Edge\ Health\ Probe$ [NC]'  >> /etc/ap
 RUN echo 'RewriteRule ^ - [R=200,L]' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 
 #Azure health check - default
-RUN echo 'RewriteEngine On' >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo 'RewriteCond %{HTTP_USER_AGENT} ^Edge\ Health\ Probe$ [NC]'  >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo 'RewriteRule ^ - [R=200,L]' >> /etc/apache2/sites-enabled/000-default.conf
-RUN echo '</VirtualHost>' >> /etc/apache2/sites-enabled/000-default.conf
+RUN sed -i '/RewriteEngine on/i \
+RewriteEngine On \
+RewriteCond %{HTTP_USER_AGENT} ^Edge\\ Health\\ Probe$ [NC] \
+RewriteRule ^ - [R=200,L]' /etc/apache2/sites-enabled/000-default.conf
+
+
+#RUN echo '</VirtualHost>' >> /etc/apache2/sites-enabled/000-default.conf
 
 # Adding redirect.rules to config 
 RUN echo 'Include /etc/apache2/redirect.rules' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
