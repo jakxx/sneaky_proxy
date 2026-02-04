@@ -75,11 +75,16 @@ RUN echo "RewriteRule ^(.*)$ https://${REDIRECT_URL}/? [L,R=301]" >> /etc/apache
 RUN echo 'RewriteCond %{HTTP_USER_AGENT} ^Edge\ Health\ Probe$ [NC]'  >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN echo 'RewriteRule ^ - [R=200,L]' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 
+# Allow Azure Front Door traffic
+RUN echo 'RewriteCond %{HTTP:X-Azure-FDID} !^$' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+RUN echo 'RewriteRule ^ - [L]' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+
 #Azure health check - default
 RUN sed -i '/RewriteEngine on/i \
 RewriteEngine On \
 RewriteCond %{HTTP_USER_AGENT} ^Edge\\ Health\\ Probe$ [NC] \
 RewriteRule ^ - [R=200,L]' /etc/apache2/sites-enabled/000-default.conf
+
 
 
 #RUN echo '</VirtualHost>' >> /etc/apache2/sites-enabled/000-default.conf
