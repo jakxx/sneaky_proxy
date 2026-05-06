@@ -48,7 +48,7 @@ RUN a2enmod proxy_http proxy_balancer lbmethod_byrequests proxy proxy_ajp rewrit
 
 # Add cron job for renewal
 COPY renew-cron /etc/cron.d/certbot-renew
-RUN chmod 0644 /etc/cron.d/certbot-renew && crontab /etc/cron.d/certbot-renew
+RUN chmod 0644 /etc/cron.d/certbot-renew
 
 # Copying the latest redirect.rules over
 COPY --from=builder /tmp/redirect.rules /etc/apache2/redirect.rules
@@ -93,4 +93,4 @@ RUN sed -i -e '159d' /etc/apache2/redirect.rules
 # Grab script to edit rules if needed
 COPY comment_redir_rules.py /etc/apache2/
 
-CMD apachectl -D BACKGROUND && tail -f /var/log/apache2/error.log -f /var/log/apache2/access.log
+CMD service cron start && apachectl -D BACKGROUND && tail -f /var/log/apache2/error.log -f /var/log/apache2/access.log
