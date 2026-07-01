@@ -72,7 +72,8 @@ RUN echo 'Header always set Content-Security-Policy upgrade-insecure-requests' >
 RUN echo 'Header always set X-XSS-Protection "1; mode=block"' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN echo 'Header always set X-Frame-Options "SAMEORIGIN"' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 RUN echo 'Header always set X-Content-Type-Options "nosniff"' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
-RUN echo 'Header set Content-Type "text/html; charset=utf-8"' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+RUN echo 'Header always set Content-Type "text/html; charset=utf-8"' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
+RUN echo 'Header always set Referrer-Policy: no-referrer' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
 
 # Updating configuration for proxy
 RUN echo 'ProxyPreserveHost On' >> /etc/apache2/sites-enabled/000-default-le-ssl.conf
